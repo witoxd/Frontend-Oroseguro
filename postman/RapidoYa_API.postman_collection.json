@@ -1,0 +1,435 @@
+{
+	"info": {
+		"_postman_id": "f5e6d7c8-a9b0-1234-5678-9abcdef01234",
+		"name": "Rapido Ya API",
+		"description": "Colección de Postman para probar la API de Rapido Ya",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Autenticación",
+			"item": [
+				{
+					"name": "Registro",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"usuario_prueba\",\n    \"email\": \"usuario@ejemplo.com\",\n    \"password\": \"Contraseña123\",\n    \"is_active\": true,\n    \"avatar\": \"https://ui-avatars.com/api/?name=Usuario+Prueba\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Registra un nuevo usuario en el sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"usuario@ejemplo.com\",\n    \"password\": \"Contraseña123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Inicia sesión con un usuario existente"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"token_de_actualizacion_obtenido_en_login\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/refresh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "Obtiene un nuevo token de acceso usando un token de actualización"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer token_de_acceso_obtenido_en_login"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"token_de_actualizacion_obtenido_en_login\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Cierra la sesión del usuario actual"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados con la autenticación de usuarios"
+		},
+		{
+			"name": "Clientes",
+			"item": [
+				{
+					"name": "Obtener todos los clientes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer token_de_acceso_obtenido_en_login"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"customers"
+							]
+						},
+						"description": "Obtiene todos los clientes registrados en el sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener cliente por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer token_de_acceso_obtenido_en_login"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/customers/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"customers",
+								"1"
+							]
+						},
+						"description": "Obtiene un cliente específico por su ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Crear cliente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer token_de_acceso_obtenido_en_login"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Cliente Ejemplo\",\n    \"email\": \"cliente@ejemplo.com\",\n    \"phone\": \"123456789\",\n    \"address\": \"Calle Ejemplo 123\",\n    \"userId\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/customers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"customers"
+							]
+						},
+						"description": "Crea un nuevo cliente"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados con la gestión de clientes"
+		},
+		{
+			"name": "Pedidos",
+			"item": [
+				{
+					"name": "Obtener todos los pedidos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer token_de_acceso_obtenido_en_login"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"orders"
+							]
+						},
+						"description": "Obtiene todos los pedidos registrados en el sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "Crear pedido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer token_de_acceso_obtenido_en_login"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerId\": 1,\n    \"deliveryAddress\": \"Calle Entrega 456\",\n    \"status\": \"pending\",\n    \"totalAmount\": 150.50,\n    \"dateTime\": \"{{currentISODateTime}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"orders"
+							]
+						},
+						"description": "Crea un nuevo pedido"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados con la gestión de pedidos"
+		},
+		{
+			"name": "Repartidores",
+			"item": [
+				{
+					"name": "Obtener todos los repartidores",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer token_de_acceso_obtenido_en_login"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/delivery-persons",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"delivery-persons"
+							]
+						},
+						"description": "Obtiene todos los repartidores registrados en el sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "Crear repartidor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer token_de_acceso_obtenido_en_login"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Repartidor Ejemplo\",\n    \"email\": \"repartidor@ejemplo.com\",\n    \"phone\": \"987654321\",\n    \"status\": \"available\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/delivery-persons",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"delivery-persons"
+							]
+						},
+						"description": "Crea un nuevo repartidor"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados con la gestión de repartidores"
+		},
+		{
+			"name": "Productos/Servicios",
+			"item": [
+				{
+					"name": "Obtener todos los productos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer token_de_acceso_obtenido_en_login"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/product-services",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"product-services"
+							]
+						},
+						"description": "Obtiene todos los productos/servicios registrados en el sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "Crear producto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer token_de_acceso_obtenido_en_login"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Producto Ejemplo\",\n    \"description\": \"Descripción del producto ejemplo\",\n    \"price\": 50.75,\n    \"category\": \"Electrónica\",\n    \"imageUrl\": \"https://ejemplo.com/imagen.jpg\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/product-services",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"product-services"
+							]
+						},
+						"description": "Crea un nuevo producto/servicio"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints relacionados con la gestión de productos y servicios"
+		}
+	]
+} 
