@@ -1,20 +1,24 @@
-import express from 'express';
-import { AuthController } from '../controllers/auth.controller';
+import express, { Request, Response } from 'express';
+import authController from '../controllers/auth.controller';
 import { authenticateJWT } from '../middleware/auth.middleware';
 
 const router = express.Router();
-const authController = new AuthController();
 
 // Ruta: POST /api/auth/register
-router.post('/register', (req, res) => authController.register(req, res));
+router.post('/register', (req: Request, res: Response) => authController.register(req, res));
 
 // Ruta: POST /api/auth/login
-router.post('/login', (req, res) => authController.login(req, res));
+router.post('/login', (req: Request, res: Response) => authController.login(req, res));
 
 // Ruta: POST /api/auth/refresh
-router.post('/refresh', (req, res) => authController.refresh(req, res));
+router.post('/refresh', (req: Request, res: Response) => authController.refresh(req, res));
 
 // Ruta: POST /api/auth/logout
-router.post('/logout', authenticateJWT, (req, res) => authController.logout(req, res));
+router.post('/logout', authenticateJWT, (req: Request, res: Response) => authController.logout(req, res));
+
+// Ruta para login simplificado (para uso en frontend)
+router.post('/login-user', (req: Request, res: Response) => {
+  authController.loginCliente(req, res);
+});
 
 export default router; 

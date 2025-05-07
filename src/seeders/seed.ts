@@ -9,6 +9,11 @@ import OrderProduct from '../models/OrderProduct';
 import Activity from '../models/Activity';
 import Route from '../models/Route';
 import { setupAssociations } from '../models/associations';
+import { RefreshToken } from '../models/RefreshToken';
+import { User } from '../models/User';
+import { RoleUser } from '../models/RoleUser';
+import bcrypt from 'bcryptjs';
+import seedRoles from './roleSeeder';
 
 const seed = async () => {
   try {
@@ -17,8 +22,101 @@ const seed = async () => {
 
     // Sincronizar la base de datos primero
     console.log('Synchronizing database...');
-    await sequelize.sync({ force: true });
-    console.log('✅ Database synchronized successfully');
+    
+    try {
+      // Para PostgreSQL, primero eliminamos las tablas con restricciones
+      await RefreshToken.drop({ cascade: true }).catch(e => console.log('No refresh_tokens table to drop'));
+      
+      // Ahora sincronizamos la base de datos
+      await sequelize.sync({ force: true });
+      console.log('✅ Database synchronized successfully');
+    } catch (syncError) {
+      console.error('Error during database synchronization:', syncError);
+      throw syncError;
+    }
+
+    // Crear roles
+    await seedRoles();
+
+    // Crear usuarios con diferentes roles
+    console.log('Creating users with roles...');
+    const users = [];
+    
+    // Crear un administrador
+    const adminUser = await User.create({
+      username: 'admin',
+      email: 'admin@example.com',
+      password: 'admin123',
+      is_active: true,
+      avatar: faker.image.avatar()
+    });
+    
+    await RoleUser.create({
+      user_id: adminUser.id,
+      role_id: 1, // rol admin
+      is_active: true
+    });
+    
+    users.push(adminUser);
+    
+    // Crear usuarios normales
+    for (let i = 1; i <= 5; i++) {
+      const user = await User.create({
+        username: `user${i}`,
+        email: `user${i}@example.com`,
+        password: 'password123',
+        is_active: true,
+        avatar: faker.image.avatar()
+      });
+      
+      await RoleUser.create({
+        user_id: user.id,
+        role_id: 2, // rol user
+        is_active: true
+      });
+      
+      users.push(user);
+    }
+    
+    // Crear usuarios con rol de cliente
+    for (let i = 1; i <= 3; i++) {
+      const user = await User.create({
+        username: `cliente${i}`,
+        email: `cliente${i}@example.com`,
+        password: 'password123',
+        is_active: true,
+        avatar: faker.image.avatar()
+      });
+      
+      await RoleUser.create({
+        user_id: user.id,
+        role_id: 3, // rol cliente
+        is_active: true
+      });
+      
+      users.push(user);
+    }
+    
+    // Crear usuarios con rol de repartidor
+    for (let i = 1; i <= 3; i++) {
+      const user = await User.create({
+        username: `repartidor${i}`,
+        email: `repartidor${i}@example.com`,
+        password: 'password123',
+        is_active: true,
+        avatar: faker.image.avatar()
+      });
+      
+      await RoleUser.create({
+        user_id: user.id,
+        role_id: 4, // rol repartidor
+        is_active: true
+      });
+      
+      users.push(user);
+    }
+    
+    console.log('✅ Users with roles created');
 
     // Crear 100 clientes
     console.log('Creating customers...');

@@ -1,5 +1,4 @@
 import { Sequelize } from 'sequelize';
-import * as fs from 'fs';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
 
