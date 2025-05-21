@@ -15,11 +15,22 @@ declare global {
 }
 
 export const authenticateJWT = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  // Excluir rutas de autenticación
+  if (
+    req.originalUrl.includes("/api/auth/register") ||
+    req.originalUrl.includes("/api/auth/login") ||
+    req.originalUrl.includes("/api/auth/test") ||
+    req.originalUrl.includes("/register-test") ||
+    req.originalUrl.includes("/direct-register")
+  ) {
+    console.log("Ruta excluida del middleware de autenticación JWT:", req.originalUrl)
+    return next()
+  }
+
   try {
     // Agregar un log para depuración
-    console.log("Ruta solicitada:", req.path)
+    console.log("Middleware authenticateJWT ejecutándose para:", req.originalUrl)
     console.log("Método:", req.method)
-    console.log("Headers:", req.headers)
 
     // Obtener el token de autorización
     const authHeader = req.headers.authorization

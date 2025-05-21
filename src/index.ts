@@ -7,6 +7,8 @@ import figlet from "figlet"
 import passport from "./config/passport"
 import sequelize from "./config/db.config"
 import { setupAssociations } from "./models/associations"
+import seedRoles from "./seeders/roleSeeder"
+import seedPermissions from "./seeders/permissionSeeder"
 
 // Import routes
 import courseRoutes from "./routes/course.routes"
@@ -15,6 +17,7 @@ import lessonRoutes from "./routes/lesson.routes"
 import authRoutes from "./routes/auth.routes"
 import { User } from "./models/User"
 import { RoleUser } from "./models/RoleUser"
+import { Role } from "./models/Role"
 
 // Cargar variables de entorno
 dotenv.config()
@@ -64,7 +67,26 @@ app.post("/direct-register", async (req, res) => {
     // Valores por defecto para campos opcionales
     const is_active = req.body.is_active !== undefined ? req.body.is_active : true
     const avatar = req.body.avatar || null
-    const roleId = req.body.roleId || 2 // Por defecto, rol de usuario normal
+
+    // Verificar si el rol existe, si no, usar el primer rol disponible
+    let roleId = req.body.roleId || 2 // Por defecto, rol de usuario normal
+    const role = await Role.findByPk(roleId)
+    if (!role) {
+      // Si el rol no existe, buscar el primer rol disponible
+      const firstRole = await Role.findOne()
+      if (firstRole) {
+        roleId = firstRole.id
+        console.log(`Rol con ID ${req.body.roleId || 2} no encontrado, usando rol con ID ${roleId}`)
+      } else {
+        // Si no hay roles, crear uno
+        const newRole = await Role.create({
+          name: "user",
+          is_active: true,
+        })
+        roleId = newRole.id
+        console.log(`No se encontraron roles, se creó un nuevo rol con ID ${roleId}`)
+      }
+    }
 
     // Crear el usuario
     const user = await User.create({
@@ -97,17 +119,16 @@ app.post("/direct-register", async (req, res) => {
     })
   } catch (error) {
     console.error("Error en registro directo:", error)
-    res.status(500).json({ error: "Error al registrar el usuario" })
+    res.status(500).json({ error: "Error al registrar el usuario", details: error })
   }
 })
 
 // Rutas - Importante: Montar las rutas después de los middlewares
+// Montar las rutas de autenticación primero para evitar conflictos
+app.use("/api/auth", authRoutes)
 app.use("/api", courseRoutes)
 app.use("/api", unitRoutes)
 app.use("/api", lessonRoutes)
-
-// Montar las rutas de autenticación al final para evitar conflictos
-app.use("/api/auth", authRoutes)
 
 // Iniciar servidor
 const startServer = async () => {
@@ -122,6 +143,12 @@ const startServer = async () => {
     // Sincronizar modelos con la base de datos (crear tablas)
     await sequelize.sync({ force: true }) // ¡CUIDADO! force:true borra y recrea las tablas
     console.log("🔄 Tablas creadas/actualizadas en la base de datos")
+
+    // Ejecutar seeders para crear roles y permisos
+    console.log("🌱 Ejecutando seeders...")
+    await seedRoles()
+    await seedPermissions()
+    console.log("✅ Seeders ejecutados correctamente")
 
     // Iniciar servidor
     app.listen(PORT, () => {
