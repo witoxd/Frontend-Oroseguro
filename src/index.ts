@@ -13,6 +13,8 @@ import courseRoutes from "./routes/course.routes"
 import unitRoutes from "./routes/unit.routes"
 import lessonRoutes from "./routes/lesson.routes"
 import authRoutes from "./routes/auth.routes"
+import { User } from "./models/User"
+import { RoleUser } from "./models/RoleUser"
 
 // Cargar variables de entorno
 dotenv.config()
@@ -32,16 +34,80 @@ app.use(express.urlencoded({ extended: true }))
 // Inicializar Passport
 app.use(passport.initialize())
 
-// Rutas
-app.use("/api", courseRoutes)
-app.use("/api", unitRoutes)
-app.use("/api", lessonRoutes)
-app.use("/api/auth", authRoutes)
-
 // Ruta para verificar que el servidor está funcionando
 app.get("/", (req, res) => {
   res.json({ message: "Bienvenido a la API de parcial2py" })
 })
+
+// Ruta de prueba directa
+app.post("/register-test", (req, res) => {
+  console.log("Cuerpo de la solicitud:", req.body)
+  res.status(200).json({ message: "Ruta de prueba funcionando", body: req.body })
+})
+
+// Ruta de registro directa en el archivo principal
+app.post("/direct-register", async (req, res) => {
+  try {
+    console.log("Procesando solicitud de registro directo:", req.body)
+
+    // Validar que se recibieron los datos necesarios
+    const { username, email, password } = req.body
+
+    if (!username || !email || !password) {
+      res.status(400).json({
+        error: "Faltan datos requeridos",
+        received: req.body,
+      })
+      return
+    }
+
+    // Valores por defecto para campos opcionales
+    const is_active = req.body.is_active !== undefined ? req.body.is_active : true
+    const avatar = req.body.avatar || null
+    const roleId = req.body.roleId || 2 // Por defecto, rol de usuario normal
+
+    // Crear el usuario
+    const user = await User.create({
+      username,
+      email,
+      password,
+      is_active,
+      avatar,
+    })
+
+    // Asignar rol al usuario
+    await RoleUser.create({
+      user_id: user.id,
+      role_id: roleId,
+      is_active: true,
+    })
+
+    const token = user.generateToken()
+    res.status(201).json({
+      msg: "Usuario registrado exitosamente",
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        is_active: user.is_active,
+        avatar: user.avatar,
+        role: roleId,
+      },
+      token,
+    })
+  } catch (error) {
+    console.error("Error en registro directo:", error)
+    res.status(500).json({ error: "Error al registrar el usuario" })
+  }
+})
+
+// Rutas - Importante: Montar las rutas después de los middlewares
+app.use("/api", courseRoutes)
+app.use("/api", unitRoutes)
+app.use("/api", lessonRoutes)
+
+// Montar las rutas de autenticación al final para evitar conflictos
+app.use("/api/auth", authRoutes)
 
 // Iniciar servidor
 const startServer = async () => {
@@ -60,6 +126,13 @@ const startServer = async () => {
     // Iniciar servidor
     app.listen(PORT, () => {
       console.log(`✅ Servidor ejecutándose en el puerto ${PORT}`)
+      console.log(`📝 Rutas disponibles:`)
+      console.log(`   - GET  /`)
+      console.log(`   - POST /register-test`)
+      console.log(`   - POST /direct-register (Nueva ruta directa)`)
+      console.log(`   - POST /api/auth/register`)
+      console.log(`   - POST /api/auth/login`)
+      console.log(`   - GET  /api/auth/test`)
     })
   } catch (error) {
     console.error("Error al iniciar el servidor:", error)
