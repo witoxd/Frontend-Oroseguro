@@ -102,3 +102,4 @@ npm run migrate
 
 El seeder está preparado para manejar casos donde las columnas no existen, pero es preferible ejecutar las migraciones para asegurar la consistencia entre los modelos y la base de datos.
 # proyecto-de-grupo-
+# Parcial2
