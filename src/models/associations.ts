@@ -1,39 +1,61 @@
 // associations.ts
-import Customer from './Customer';
-import Order from './Order';
-import ProductService from './ProductService';
-import DeliveryPerson from './DeliveryPerson';
-import Vehicle from './Vehicle';
-import Activity from './Activity';
-import OrderProduct from './OrderProduct';
-import Route from './Route';
-import { User } from './User';
+import Course from "./Course"
+import Unit from "./Unit"
+import Lesson from "./Lesson"
+import { User } from "./User"
+import { Role } from "./Role"
+import { RoleUser } from "./RoleUser"
+import { Permission } from "./Permission"
+import { RefreshToken } from "./RefreshToken"
 
 export const setupAssociations = () => {
-  User.hasOne(Customer, { foreignKey: 'userId' });
-  Customer.belongsTo(User, { foreignKey: 'userId' });
+  // Mantener asociaciones existentes de User, Role, etc.
+  User.hasMany(RoleUser, {
+    foreignKey: "user_id",
+    onDelete: "RESTRICT",
+  })
+  RoleUser.belongsTo(User, {
+    foreignKey: "user_id",
+  })
 
-  Customer.hasMany(Order, { foreignKey: 'customerId' });
-  Order.belongsTo(Customer, { foreignKey: 'customerId' });
+  Role.hasMany(RoleUser, {
+    foreignKey: "role_id",
+    onDelete: "RESTRICT",
+  })
+  RoleUser.belongsTo(Role, {
+    foreignKey: "role_id",
+  })
 
-  Order.belongsToMany(ProductService, {
-    through: OrderProduct,
-    foreignKey: 'orderId'
-  });
-  ProductService.belongsToMany(Order, {
-    through: OrderProduct,
-    foreignKey: 'productServiceId'
-  });
+  Role.hasMany(Permission, {
+    foreignKey: "role_id",
+    onDelete: "RESTRICT",
+  })
+  Permission.belongsTo(Role, {
+    foreignKey: "role_id",
+  })
 
-  DeliveryPerson.hasOne(Vehicle, { foreignKey: 'deliveryPersonId' });
-  Vehicle.belongsTo(DeliveryPerson, { foreignKey: 'deliveryPersonId' });
+  User.hasMany(RefreshToken, {
+    foreignKey: "user_id",
+    onDelete: "RESTRICT",
+  })
+  RefreshToken.belongsTo(User, {
+    foreignKey: "user_id",
+  })
 
-  Order.belongsTo(DeliveryPerson, { foreignKey: 'deliveryPersonId' });
-  DeliveryPerson.hasMany(Order, { foreignKey: 'deliveryPersonId' });
+  // Nuevas asociaciones
+  Course.hasMany(Unit, {
+    foreignKey: "course_id",
+    onDelete: "CASCADE",
+  })
+  Unit.belongsTo(Course, {
+    foreignKey: "course_id",
+  })
 
-  Order.hasMany(Activity, { foreignKey: 'orderId' });
-  Activity.belongsTo(Order, { foreignKey: 'orderId' });
-
-  DeliveryPerson.hasMany(Route, { foreignKey: 'deliveryPersonId' });
-  Route.belongsTo(DeliveryPerson, { foreignKey: 'deliveryPersonId' });
-};
+  Unit.hasMany(Lesson, {
+    foreignKey: "unit_id",
+    onDelete: "CASCADE",
+  })
+  Lesson.belongsTo(Unit, {
+    foreignKey: "unit_id",
+  })
+}

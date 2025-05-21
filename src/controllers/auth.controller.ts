@@ -5,7 +5,6 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { RoleUser } from '../models/RoleUser';
 import { Role } from '../models/Role';
-import Customer from '../models/Customer';
 
 export class AuthController {
   public async register(req: Request, res: Response): Promise<void> {

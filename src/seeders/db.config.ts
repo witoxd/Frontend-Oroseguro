@@ -16,27 +16,11 @@ const dbDialect = process.env.DB_DIALECT as SupportedDialect || 'sqlite';
 let sequelize: Sequelize;
 
 switch (dbDialect) {
-  case 'mysql':
-    sequelize = new Sequelize(
-      process.env.MYSQL_DB_NAME || 'rapido_ya',
-      process.env.MYSQL_DB_USER || 'root',
-      process.env.MYSQL_DB_PASSWORD || '',
-      {
-        host: process.env.MYSQL_DB_HOST || 'localhost',
-        port: parseInt(process.env.MYSQL_DB_PORT || '3306'),
-        dialect: 'mysql',
-        logging: false,
-        define: {
-          timestamps: true,
-          underscored: true
-        }
-      }
-    );
-    break;
+
 
   case 'postgres':
     sequelize = new Sequelize(
-      process.env.POSTGRES_DB_NAME || 'rapido_ya',
+      process.env.POSTGRES_DB_NAME || 'Parcial',
       process.env.POSTGRES_DB_USER || 'postgres',
       process.env.POSTGRES_DB_PASSWORD || '',
       {
@@ -52,29 +36,7 @@ switch (dbDialect) {
     );
     break;
 
-  case 'mssql':
-    sequelize = new Sequelize(
-      process.env.MSSQL_DB_NAME || 'rapido_ya',
-      process.env.MSSQL_DB_USER || 'sa',
-      process.env.MSSQL_DB_PASSWORD || '',
-      {
-        host: process.env.MSSQL_DB_HOST || 'localhost',
-        port: parseInt(process.env.MSSQL_DB_PORT || '1433'),
-        dialect: 'mssql',
-        dialectOptions: {
-          options: {
-            encrypt: true,
-            trustServerCertificate: process.env.MSSQL_DB_TRUST_SERVER_CERTIFICATE === 'true'
-          }
-        },
-        logging: false,
-        define: {
-          timestamps: true,
-          underscored: true
-        }
-      }
-    );
-    break;
+
 
   case 'sqlite':
   default:
