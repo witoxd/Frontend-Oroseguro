@@ -20,6 +20,16 @@ import { RoleUser } from "./models/RoleUser"
 import { Role } from "./models/Role"
 
 // Cargar variables de entorno
+// Mano si estas viendo esto, lamento la perdida de tu parcial
+// Por otro lado habia un error de logica en este codigo que me atraso bastante
+// el error era que se estaba aplicando autenticaciones an las rutas de login y register
+// y tambien en el aouth register y auth login
+// Esto provocaba que no importa que registraras o logearas en esas rutas ya que te iba a pedir un token
+// tu compañero que esta haciedno este codigo no tuvo en cuenta este error y me atraso mucho
+// al final solucione pero no tuve en cuenta que ibas a tener errores en tu maquin
+// Desconozco por esos errores, ya que en mi maquina si funciona.
+// Suerte con el video 
+
 dotenv.config()
 
 const app = express()
@@ -145,6 +155,7 @@ const startServer = async () => {
     console.log("🔄 Tablas creadas/actualizadas en la base de datos")
 
     // Ejecutar seeders para crear roles y permisos
+    // Se supone que debe ejecutarse una vez los datos falsos para roles y permisos pero XD no funciona no se porque
     console.log("🌱 Ejecutando seeders...")
     await seedRoles()
     await seedPermissions()

@@ -9,17 +9,17 @@ import { Permission } from "../models/Permission"
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   // Excluir rutas de autenticación y registro
   if (
-    req.path.includes("/auth/register") ||
-    req.path.includes("/auth/login") ||
-    req.path.includes("/auth/test") ||
-    req.path.includes("/register-test") ||
-    req.path.includes("/direct-register")
+    req.originalUrl.includes("/api/auth/register") ||
+    req.originalUrl.includes("/api/auth/login") ||
+    req.originalUrl.includes("/api/auth/test") ||
+    req.originalUrl.includes("/register-test") ||
+    req.originalUrl.includes("/direct-register")
   ) {
-    console.log("Ruta excluida del middleware de autenticación:", req.path)
+    console.log("Ruta excluida del middleware de autorización:", req.originalUrl)
     return next()
   }
 
-  console.log("Middleware de autenticación ejecutándose para:", req.path)
+  console.log("Middleware de autorización ejecutándose para:", req.originalUrl)
 
   const token = req.header("Authorization")?.replace("Bearer ", "")
   const currentMethod = req.method
