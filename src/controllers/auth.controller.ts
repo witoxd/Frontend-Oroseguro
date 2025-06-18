@@ -24,7 +24,7 @@ export class AuthController {
       // Valores por defecto para campos opcionales
       const is_active = req.body.is_active !== undefined ? req.body.is_active : true
       const avatar = req.body.avatar || null
-      const roleId = req.body.roleId || 2 // Por defecto, rol de usuario normal
+      const roleId = req.body.roleId || 1 // Por defecto, rol de usuario normal
 
       // Crear el usuario
       const user: User = await User.create({

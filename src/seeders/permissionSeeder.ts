@@ -21,9 +21,6 @@ const seedPermissions = async () => {
       { name: "POST", role_id: adminRole.id },
       { name: "PUT", role_id: adminRole.id },
       { name: "DELETE", role_id: adminRole.id },
-
-      // Permisos para user (solo lectura)
-      { name: "GET", role_id: userRole.id },
     ]
 
     // Insertar permisos

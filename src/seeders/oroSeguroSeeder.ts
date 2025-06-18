@@ -74,7 +74,7 @@ const seedOroSeguro = async () => {
 
       await RoleUser.create({
         user_id: empleado.id,
-        role_id: 2, // rol user/empleado
+        role_id: 1, // rol user/empleado
         is_active: true,
       })
 
