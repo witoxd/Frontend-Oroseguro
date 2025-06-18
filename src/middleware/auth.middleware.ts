@@ -19,9 +19,8 @@ export const authenticateJWT = async (req: Request, res: Response, next: NextFun
   if (
     req.originalUrl.includes("/api/auth/register") ||
     req.originalUrl.includes("/api/auth/login") ||
-    req.originalUrl.includes("/api/auth/test") ||
-    req.originalUrl.includes("/register-test") ||
-    req.originalUrl.includes("/direct-register")
+    req.originalUrl.includes("/api/auth/test") 
+
   ) {
     console.log("Ruta excluida del middleware de autenticación JWT:", req.originalUrl)
     return next()

@@ -11,9 +11,8 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   if (
     req.originalUrl.includes("/api/auth/register") ||
     req.originalUrl.includes("/api/auth/login") ||
-    req.originalUrl.includes("/api/auth/test") ||
-    req.originalUrl.includes("/register-test") ||
-    req.originalUrl.includes("/direct-register")
+    req.originalUrl.includes("/api/auth/test") 
+
   ) {
     console.log("Ruta excluida del middleware de autorización:", req.originalUrl)
     return next()

@@ -18,17 +18,17 @@ export class User extends Model {
 
   public generateToken(): string {
     return jwt.sign({ id: this.id }, process.env.JWT_SECRET || 'secret', {
-      expiresIn: '1m',
+      expiresIn: '15m',
     });
   }
 
   public generateRefreshToken(): { token: string, expiresAt: Date } {
     // const expiresIn = '24H';
-    const expiresIn = '3m';
+    const expiresIn = '15m';
     const token = jwt.sign({ id: this.id }, process.env.JWT_SECRET || 'secret', {
       expiresIn,
     });
-    const expiresAt = new Date(Date.now() + 3 * 60 * 1000); // 10 minutos
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutos
     // const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 horas
     return { token, expiresAt };
   }
@@ -61,7 +61,8 @@ User.init(
     },
     is_active: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: true,
+      defaultValue: true
     },
     avatar: {
       type: DataTypes.STRING,
